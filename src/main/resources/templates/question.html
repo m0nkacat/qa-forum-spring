@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${question.title} + ' | Ответы по 500 рублей'">Вопрос</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+<div id="space-background"></div>
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+<div th:replace="~{fragments :: site-sidebar}"></div>
+<div th:replace="~{fragments :: site-header}"></div>
+
+<main class="question-detail page-shell">
+    <a class="back-link" th:href="@{/home}"><i class="fas fa-arrow-left"></i> Все вопросы</a>
+
+    <div th:if="${param.voteError}" class="error-message">Не удалось сохранить голос. Попробуйте ещё раз.</div>
+    <div th:if="${param.answerError}" class="error-message">Не удалось добавить ответ. Проверьте текст ответа.</div>
+
+    <div class="question-card">
+        <h1 th:text="${question.title}"></h1>
+        <div class="question-body" th:text="${question.body}"></div>
+        <div class="question-meta" th:text="'Автор: ' + ${question.user.username}"></div>
+        <div class="vote-row">
+            <form th:action="@{/questions/{id}/vote(id=${question.questionId})}" method="post">
+                <input type="hidden" name="voteType" value="1">
+                <button type="submit" class="vote-btn" th:classappend="${myVote != null and myVote.voteType == 1 ? ' active' : ''}" title="Плюс"><i class="fas fa-plus"></i></button>
+            </form>
+            <span class="vote-count" th:text="${upVotes - downVotes}">0</span>
+            <form th:action="@{/questions/{id}/vote(id=${question.questionId})}" method="post">
+                <input type="hidden" name="voteType" value="-1">
+                <button type="submit" class="vote-btn" th:classappend="${myVote != null and myVote.voteType == -1 ? ' active' : ''}" title="Минус"><i class="fas fa-minus"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <h2 class="answers-title">Ответы (<span th:text="${#lists.size(answers)}">0</span>)</h2>
+    <div th:if="${answers.isEmpty()}" class="answer-card">Пока никто не ответил. Будь первым.</div>
+    <div th:each="a : ${answers}" class="answer-card">
+        <div class="answer-body" th:text="${a.body}"></div>
+    </div>
+
+    <h2 class="answers-title">Оставить ответ</h2>
+    <form th:action="@{/questions/{id}/answers(id=${question.questionId})}" th:object="${answer}" method="post" class="crud-form answer-form">
+        <div class="form-group">
+            <textarea th:field="*{body}" placeholder="Ваш ответ"></textarea>
+            <div th:if="${#fields.hasErrors('body')}" class="field-error" th:errors="*{body}"></div>
+        </div>
+        <button type="submit"><i class="fas fa-paper-plane"></i> Ответить</button>
+    </form>
+</main>
+<footer><div class="footer-links"><a href="/feedback.jpg">Обратная связь</a></div></footer>
+<script>function toggleSidebar(){document.getElementById("sidebar").classList.toggle("active");document.getElementById("overlay").classList.toggle("active");}</script>
+</body>
+</html>

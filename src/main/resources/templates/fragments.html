@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<aside th:fragment="site-sidebar" id="sidebar" class="sidebar">
+    <button class="close-btn" type="button" onclick="toggleSidebar()">×</button>
+
+    <div class="sidebar-main-links">
+        <a th:href="@{/home}"><i class="fas fa-question-circle"></i> Вопросы</a>
+        <a th:href="@{/ask-question}" th:if="${isUser}"><i class="fas fa-plus-circle"></i> Задать вопрос</a>
+    </div>
+
+    <div th:if="${isModerator or isAdmin}" class="sidebar-admin-menu">
+        <div class="sidebar-divider"></div>
+        <a th:href="@{/questions}"><i class="fas fa-database"></i> Управление вопросами</a>
+        <a th:href="@{/answers}"><i class="fas fa-comment-dots"></i> Ответы</a>
+        <a th:href="@{/comments}"><i class="fas fa-comments"></i> Комментарии</a>
+        <a th:href="@{/tags}"><i class="fas fa-tags"></i> Теги</a>
+        <a th:href="@{/votes}"><i class="fas fa-thumbs-up"></i> Голоса</a>
+        <a th:if="${isModerator or isAdmin}" th:href="@{/questiontags}"><i class="fas fa-link"></i> Связи вопрос-тег</a>
+        <a th:if="${isModerator or isAdmin}" th:href="@{/users}"><i class="fas fa-users"></i> Пользователи</a>
+        <a th:if="${isModerator or isAdmin}" th:href="@{/roles}"><i class="fas fa-user-tag"></i> Роли</a>
+        <a th:if="${isAdmin}" th:href="@{/admin/users}" class="sidebar-admin"><i class="fas fa-user-shield"></i> Панель администратора</a>
+    </div>
+</aside>
+
+<header th:fragment="site-header">
+    <div class="header-container">
+        <div class="header-left">
+            <button class="menu-btn" type="button" onclick="toggleSidebar()">☰</button>
+            <div><div class="logo">Ответы по 500 рублей</div></div>
+        </div>
+        <div class="header-right">
+            <span th:if="${isAuth}">
+                <span class="current-user" th:text="${currentUsername}"></span>
+                <form th:action="@{/logout}" method="post" class="logout-form">
+                    <button type="submit" class="header-action"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+                </form>
+            </span>
+            <span th:unless="${isAuth}">
+                <a th:href="@{/login}" class="header-link">Войти</a>
+                <a th:href="@{/registration}" class="signup-btn">Зарегистрироваться</a>
+            </span>
+        </div>
+    </div>
+</header>
+</body>
+</html>

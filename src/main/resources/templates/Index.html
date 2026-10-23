@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вопросы | Ответы по 500 рублей</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div id="space-background"></div>
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+<div th:replace="~{fragments :: site-sidebar}"></div>
+<div th:replace="~{fragments :: site-header}"></div>
+
+<main class="questions-page">
+    <div class="questions-toolbar">
+        <div>
+            <h1 class="page-title questions-page-title">Вопросы</h1>
+            <div class="questions-count" th:text="${questionsTotal} + ' вопросов'">0 вопросов</div>
+        </div>
+        <a th:if="${isUser}" th:href="@{/ask-question}" class="ask-top-btn">
+            <i class="fas fa-plus"></i> Задать вопрос
+        </a>
+    </div>
+
+    <nav class="questions-tabs" aria-label="Фильтр вопросов">
+        <a th:href="@{/home(filter='new')}"
+           class="questions-tab"
+           th:classappend="${questionFilter == 'new'} ? ' active' : ''">Новые</a>
+        <a th:href="@{/home(filter='all')}"
+           class="questions-tab"
+           th:classappend="${questionFilter == 'all'} ? ' active' : ''">Все</a>
+        <a th:href="@{/home(filter='unanswered')}"
+           class="questions-tab"
+           th:classappend="${questionFilter == 'unanswered'} ? ' active' : ''">Без ответов</a>
+    </nav>
+
+    <section class="question-feed" th:if="${!questions.isEmpty()}">
+        <a th:each="q : ${questions}"
+           th:href="@{/questions/{id}(id=${q.questionId})}"
+           class="question-row">
+            <span class="question-row-title" th:text="${q.title}"></span>
+            <i class="fas fa-chevron-right question-row-arrow"></i>
+        </a>
+    </section>
+
+    <div class="empty-state" th:if="${questions.isEmpty()}">
+        В этой категории пока нет вопросов.
+    </div>
+</main>
+
+<footer><div class="footer-links"><a href="/feedback.jpg">Обратная связь</a></div></footer>
+<script>
+    function toggleSidebar(){
+        document.getElementById("sidebar").classList.toggle("active");
+        document.getElementById("overlay").classList.toggle("active");
+    }
+</script>
+</body>
+</html>

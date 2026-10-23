@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление пользователями | Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-banner { background:linear-gradient(135deg,rgba(74,95,247,.25),rgba(120,60,200,.25));
+            border:1px solid rgba(74,95,247,.4); border-radius:10px; padding:1rem 1.5rem; margin-bottom:1.5rem;
+            display:flex; align-items:center; gap:.8rem; color:#c0ccff; }
+        .role-badge { display:inline-block; padding:.2rem .6rem; border-radius:4px; font-size:.78rem; font-weight:600; margin:.1rem; }
+        .badge-USER { background:rgba(60,160,80,.25); color:#90ee90; border:1px solid #50a060; }
+        .badge-MODERATOR { background:rgba(200,140,20,.25); color:#ffd080; border:1px solid #c09020; }
+        .badge-ADMIN { background:rgba(220,50,50,.25); color:#ff9090; border:1px solid #c04040; }
+        .badge-inactive { background:rgba(100,100,100,.25); color:#aaa; border:1px solid #666; }
+        .btn-edit { background:#4a5ff7; color:#fff; padding:.35rem .9rem; border:none; border-radius:6px; cursor:pointer; font-size:.9rem; text-decoration:none; }
+        .btn-toggle { background:rgba(255,255,255,.1); color:#ccc; padding:.35rem .9rem; border:1px solid #555; border-radius:6px; cursor:pointer; font-size:.85rem; }
+        .block-reason { margin-top:.45rem; max-width:260px; color:#ffb0b0; font-size:.78rem; line-height:1.35; }
+        td form { display:inline; }
+    </style>
+</head>
+<body>
+<div id="space-background"></div>
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+<div id="sidebar" class="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">×</button>
+    <a th:href="@{/home}"><i class="fas fa-home"></i> Главная</a>
+    <a th:href="@{/admin/users}" style="color:#ffd080"><i class="fas fa-users-cog"></i> Управление пользователями</a>
+    <a th:href="@{/questions}"><i class="fas fa-question-circle"></i> Вопросы</a>
+    <a th:href="@{/tags}"><i class="fas fa-tags"></i> Теги</a>
+</div>
+<header>
+    <div class="header-container">
+        <div class="header-left">
+            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <div class="logo">Ответы по 500 рублей</div>
+        </div>
+        <div class="header-right">
+            <span style="color:#a0b4ff; margin-right:1rem" th:text="${currentUsername}"></span>
+            <form th:action="@{/logout}" method="post" style="display:inline">
+                <button type="submit" style="background:none;border:none;cursor:pointer;color:#ccc"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+            </form>
+        </div>
+    </div>
+</header>
+<main class="crud-container">
+    <div class="admin-banner">
+        <i class="fas fa-user-shield" style="font-size:1.4rem"></i>
+        <div><strong>Панель администратора</strong> — управление пользователями и ролями</div>
+    </div>
+    <h1 class="page-title"><i class="fas fa-users-cog"></i> Пользователи системы</h1>
+    <table class="data-table">
+        <thead><tr><th>ID</th><th>Имя</th><th>Роли</th><th>Статус</th><th>Действия</th></tr></thead>
+        <tbody>
+        <tr th:each="u : ${users}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.username}"></td>
+            <td><span th:each="role : ${u.roles}" th:class="'role-badge badge-' + ${role.name()}" th:text="${role.name()}"></span></td>
+            <td>
+                <span th:if="${u.active}" class="role-badge badge-USER">Активен</span>
+                <span th:unless="${u.active}" class="role-badge badge-inactive">Заблокирован</span>
+            </td>
+            <td>
+                <a th:href="@{/admin/users/{id}/edit(id=${u.id})}" class="btn-edit"><i class="fas fa-edit"></i> Роли</a>
+                <form th:if="${u.active}" th:action="@{/admin/users/{id}/toggle-active(id=${u.id})}" method="post"
+                      onsubmit="return askBlockReason(this)">
+                    <input type="hidden" name="reason">
+                    <button type="submit" class="btn-toggle">🔒 Блок</button>
+                </form>
+                <form th:unless="${u.active}" th:action="@{/admin/users/{id}/toggle-active(id=${u.id})}" method="post">
+                    <button type="submit" class="btn-toggle">🔓 Разблок</button>
+                </form>
+                <div th:unless="${u.active}" class="block-reason">
+                    Причина: <span th:text="${u.blockReason != null and !u.blockReason.isBlank() ? u.blockReason : 'Не указана'}"></span>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer><div class="footer-links"><a href="/feedback.jpg">Обратная связь</a></div></footer>
+<script>
+    function toggleSidebar(){ document.getElementById("sidebar").classList.toggle("active"); document.getElementById("overlay").classList.toggle("active"); }
+function askBlockReason(form) {
+        const reason = prompt('Укажите причину блокировки пользователя:');
+        if (reason === null) return false;
+        form.querySelector('input[name="reason"]').value = reason.trim();
+        return true;
+    }
+</script>
+</body>
+</html>

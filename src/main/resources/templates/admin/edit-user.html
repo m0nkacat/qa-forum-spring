@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование ролей | Admin</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .edit-card { max-width:500px; margin:3rem auto; background:rgba(20,20,40,.92);
+            border:1px solid rgba(100,120,255,.3); border-radius:12px; padding:2.5rem; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+        .edit-card h2 { color:#a0b4ff; margin-bottom:1.5rem; }
+        .username-label { font-size:1.2rem; color:#fff; font-weight:600; margin-bottom:1.5rem; }
+        .role-row { display:flex; align-items:center; gap:1rem; padding:.8rem 1rem; border-radius:8px;
+            border:1px solid rgba(100,120,255,.2); margin-bottom:.6rem; cursor:pointer; transition:background .15s; }
+        .role-row:hover { background:rgba(74,95,247,.12); }
+        .role-row input[type=checkbox] { width:18px; height:18px; cursor:pointer; }
+        .role-name { font-weight:600; font-size:1rem; }
+        .role-desc { font-size:.82rem; color:#999; }
+        .role-USER .role-name { color:#90ee90; }
+        .role-MODERATOR .role-name { color:#ffd080; }
+        .role-ADMIN .role-name { color:#ff9090; }
+        .btn-save { background:#4a5ff7; color:#fff; padding:.8rem 2rem; border:none; border-radius:8px; font-size:1rem; cursor:pointer; margin-right:.8rem; }
+        .btn-back { background:rgba(255,255,255,.1); color:#ccc; padding:.8rem 2rem; border:1px solid #555; border-radius:8px; font-size:1rem; text-decoration:none; }
+        .warning { color:#ffa0a0; font-size:.83rem; margin-top:.5rem; }
+    </style>
+</head>
+<body>
+<div id="space-background"></div>
+<main style="padding:2rem">
+    <div class="edit-card">
+        <h2><i class="fas fa-user-edit"></i> Изменение ролей</h2>
+        <div class="username-label"><i class="fas fa-user"></i> <span th:text="${user.username}"></span></div>
+        <form th:action="@{/admin/users/{id}/edit(id=${user.id})}" method="post">
+            <label class="role-row role-USER">
+                <input type="checkbox" name="roles" value="USER"
+                       th:checked="${user.roles.contains(T(org.example.pr4.model.AppRole).USER)}">
+                <div><div class="role-name"><i class="fas fa-user"></i> USER</div>
+                    <div class="role-desc">Базовый пользователь: читает контент, комментирует, голосует</div></div>
+            </label>
+            <label class="role-row role-MODERATOR">
+                <input type="checkbox" name="roles" value="MODERATOR"
+                       th:checked="${user.roles.contains(T(org.example.pr4.model.AppRole).MODERATOR)}">
+                <div><div class="role-name"><i class="fas fa-shield-alt"></i> MODERATOR</div>
+                    <div class="role-desc">Модератор: управляет вопросами, ответами и тегами</div></div>
+            </label>
+            <label class="role-row role-ADMIN">
+                <input type="checkbox" name="roles" value="ADMIN"
+                       th:checked="${user.roles.contains(T(org.example.pr4.model.AppRole).ADMIN)}">
+                <div><div class="role-name"><i class="fas fa-crown"></i> ADMIN</div>
+                    <div class="role-desc">Администратор: полный доступ, управление пользователями</div></div>
+            </label>
+            <p class="warning"><i class="fas fa-info-circle"></i> Если не выбрать ни одной роли, будет назначена USER.</p>
+            <div style="margin-top:1.5rem">
+                <button type="submit" class="btn-save"><i class="fas fa-save"></i> Сохранить</button>
+                <a th:href="@{/admin/users}" class="btn-back"><i class="fas fa-arrow-left"></i> Назад</a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

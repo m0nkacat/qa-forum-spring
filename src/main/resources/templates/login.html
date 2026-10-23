@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход | Ответы по 500 рублей</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-wrapper { display:flex; justify-content:center; align-items:center; min-height:80vh; }
+        .auth-card { background:rgba(20,20,40,.92); border:1px solid rgba(100,120,255,.3);
+            border-radius:12px; padding:2.5rem 3rem; width:100%; max-width:420px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+        .auth-card h1 { text-align:center; margin-bottom:1.5rem; color:#a0b4ff; }
+        .auth-card .form-group { margin-bottom:1rem; }
+        .auth-card input { width:100%; padding:.7rem 1rem; border-radius:8px;
+            border:1px solid rgba(100,120,255,.4); background:rgba(255,255,255,.06); color:#fff; font-size:1rem; box-sizing:border-box; }
+        .auth-card button { width:100%; padding:.8rem; margin-top:.5rem; border-radius:8px; border:none;
+            background:#4a5ff7; color:#fff; font-size:1rem; cursor:pointer; }
+        .auth-card button:hover { background:#6272fa; }
+        .auth-links { text-align:center; margin-top:1rem; }
+        .auth-links a { color:#a0b4ff; }
+        .alert-error { background:rgba(220,50,50,.2); border:1px solid #e05050; border-radius:8px; padding:.6rem 1rem; margin-bottom:1rem; color:#ffa0a0; }
+        .alert-success { background:rgba(50,180,100,.2); border:1px solid #50b050; border-radius:8px; padding:.6rem 1rem; margin-bottom:1rem; color:#a0ffa0; }
+    </style>
+</head>
+<body>
+<div id="space-background"></div>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h1><i class="fas fa-sign-in-alt"></i> Вход</h1>
+        <div th:if="${param.blocked}" class="alert-error">
+            <i class="fas fa-ban"></i> <strong>Аккаунт заблокирован.</strong><br>
+            <span>Причина: </span><span th:text="${param.reason}"></span>
+        </div>
+        <div th:if="${param.error}" class="alert-error"><i class="fas fa-exclamation-triangle"></i> Неверное имя или пароль.</div>
+        <div th:if="${param.logout}" class="alert-success"><i class="fas fa-check-circle"></i> Вы вышли из системы.</div>
+        <div th:if="${param.registered}" class="alert-success"><i class="fas fa-user-check"></i> Регистрация успешна! Войдите.</div>
+        <form th:action="@{/login}" method="post">
+            <div class="form-group"><input type="text" name="username" placeholder="Имя пользователя" required autofocus></div>
+            <div class="form-group"><input type="password" name="password" placeholder="Пароль" required></div>
+            <button type="submit"><i class="fas fa-unlock"></i> Войти</button>
+        </form>
+        <div class="auth-links"><a th:href="@{/registration}">Нет аккаунта? Зарегистрироваться</a></div>
+    </div>
+</div>
+</body>
+</html>

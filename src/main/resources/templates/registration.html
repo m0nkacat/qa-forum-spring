@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация | Ответы по 500 рублей</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-wrapper { display:flex; justify-content:center; align-items:center; min-height:80vh; }
+        .auth-card { background:rgba(20,20,40,.92); border:1px solid rgba(100,120,255,.3);
+            border-radius:12px; padding:2.5rem 3rem; width:100%; max-width:420px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+        .auth-card h1 { text-align:center; margin-bottom:1.5rem; color:#a0b4ff; }
+        .auth-card .form-group { margin-bottom:1rem; }
+        .auth-card input { width:100%; padding:.7rem 1rem; border-radius:8px;
+            border:1px solid rgba(100,120,255,.4); background:rgba(255,255,255,.06); color:#fff; font-size:1rem; box-sizing:border-box; }
+        .auth-card button { width:100%; padding:.8rem; margin-top:.5rem; border-radius:8px; border:none;
+            background:#4a5ff7; color:#fff; font-size:1rem; cursor:pointer; }
+        .auth-card button:hover { background:#6272fa; }
+        .auth-links { text-align:center; margin-top:1rem; }
+        .auth-links a { color:#a0b4ff; }
+        .alert-error { background:rgba(220,50,50,.2); border:1px solid #e05050; border-radius:8px; padding:.6rem 1rem; margin-bottom:1rem; color:#ffa0a0; }
+        .hint { font-size:.8rem; color:#888; margin-top:.25rem; }
+    </style>
+</head>
+<body>
+<div id="space-background"></div>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h1><i class="fas fa-user-plus"></i> Регистрация</h1>
+        <div th:if="${error}" class="alert-error"><i class="fas fa-exclamation-triangle"></i> <span th:text="${error}"></span></div>
+        <form th:action="@{/registration}" method="post">
+            <div class="form-group"><input type="text" name="username" placeholder="Имя пользователя" required autofocus></div>
+            <div class="form-group"><input type="password" name="password" placeholder="Пароль (минимум 4 символа)" required>
+                <div class="hint">Пароль будет зашифрован (BCrypt)</div></div>
+            <div class="form-group"><input type="password" name="confirmPassword" placeholder="Повторите пароль" required></div>
+            <button type="submit"><i class="fas fa-user-check"></i> Зарегистрироваться</button>
+        </form>
+        <div class="auth-links"><a th:href="@{/login}">Уже есть аккаунт? Войти</a></div>
+    </div>
+</div>
+</body>
+</html>

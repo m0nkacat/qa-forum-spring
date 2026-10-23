@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задать вопрос | Ответы по 500 рублей</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div id="space-background"></div>
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+<div th:replace="~{fragments :: site-sidebar}"></div>
+<div th:replace="~{fragments :: site-header}"></div>
+
+<main class="ask-page-simple">
+    <a class="back-link" th:href="@{/home}"><i class="fas fa-arrow-left"></i> Все вопросы</a>
+    <div class="ask-card">
+        <h1 class="page-title">Задать вопрос</h1>
+        <p class="ask-card-subtitle">Опишите проблему и добавьте достаточно деталей для ответа.</p>
+
+        <div th:if="${param.error}" class="error-message">Не удалось добавить вопрос. Проверьте заполнение полей.</div>
+
+        <form th:action="@{/ask-question}" th:object="${question}" method="post" class="ask-form-simple">
+            <div class="form-group">
+                <label for="title">Заголовок</label>
+                <input id="title" type="text" th:field="*{title}" placeholder="Коротко сформулируйте вопрос">
+                <div th:if="${#fields.hasErrors('title')}" class="field-error" th:errors="*{title}"></div>
+            </div>
+            <div class="form-group">
+                <label for="body">Текст вопроса</label>
+                <textarea id="body" th:field="*{body}" placeholder="Опишите проблему подробнее"></textarea>
+                <div th:if="${#fields.hasErrors('body')}" class="field-error" th:errors="*{body}"></div>
+            </div>
+            <button type="submit" class="ask-submit"><i class="fas fa-paper-plane"></i> Опубликовать вопрос</button>
+        </form>
+    </div>
+</main>
+
+<footer><div class="footer-links"><a href="/feedback.jpg">Обратная связь</a></div></footer>
+<script>
+    function toggleSidebar(){
+        document.getElementById("sidebar").classList.toggle("active");
+        document.getElementById("overlay").classList.toggle("active");
+    }
+</script>
+</body>
+</html>
