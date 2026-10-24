@@ -4,6 +4,12 @@
 
 `Java 17` `Spring Boot` `Spring Security` `Spring Data JPA` `Thymeleaf` `PostgreSQL` `OpenAPI`
 
+| Лента вопросов · *Feed* | Вопрос · *Question* |
+|---|---|
+| ![Лента](screenshots/home.png) | ![Вопрос](screenshots/question.png) |
+| **Админ-панель · *Admin panel*** | **Swagger UI** |
+| ![Админка](screenshots/admin-users.png) | ![Swagger](screenshots/swagger.png) |
+
 ## Что сделано
 - **Вопросы и ответы:** задать вопрос, ответить, комментарии, теги у вопросов
 - **Главная лента** с фильтрами: новые (последние 10), все, без ответа
